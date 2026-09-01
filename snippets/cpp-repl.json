@@ -1,0 +1,37 @@
+{
+  "BigInt declaration": {
+    "prefix": "bigint",
+    "body": "cpp_int ${1:a} = cpp_int(\"${2:123456789012345678901234567890}\");",
+    "description": "BigInt (boost::multiprecision::cpp_int) variable"
+  },
+  "C++20 Concept": {
+    "prefix": "concept",
+    "body": "template<typename ${1:T}> concept ${2:Addable} = requires(${1:T} a, ${1:T} b) { a + b; };",
+    "description": "C++20 concept with requires"
+  },
+  "C++20 Requires": {
+    "prefix": "requires",
+    "body": "requires(${1:T} x) { ${2:x++;} }",
+    "description": "requires clause"
+  },
+  "Include with REPL path": {
+    "prefix": ":I",
+    "body": ":I ${1:./include}",
+    "description": "Add include path in REPL (like -I)"
+  },
+  "Load library": {
+    "prefix": ":lib",
+    "body": ":lib ${1:./lib/mylib.so}",
+    "description": "Load dynamic library in REPL"
+  },
+  "Load file": {
+    "prefix": ":load",
+    "body": ":load ${1:examples/hello.cpp}",
+    "description": "Load raw C++ file in REPL"
+  },
+  "Lambda": {
+    "prefix": "lambda",
+    "body": "auto ${1:f} = [](${2:double v}){ return ${3:v*v}; };",
+    "description": "Generic lambda (REPL-friendly)"
+  }
+}

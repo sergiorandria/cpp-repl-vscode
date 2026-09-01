@@ -1,0 +1,229 @@
+{
+  "name": "C++ REPL",
+  "scopeName": "source.cpp-repl",
+  "fileTypes": ["cpprepl", "cpp-repl", "crepl", "crpl", "repl.cpp"],
+  "patterns": [
+    { "include": "#repl-prompt" },
+    { "include": "#repl-command" },
+    { "include": "#repl-output" },
+    { "include": "#preprocessor" },
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#numbers" },
+    { "include": "#operators" },
+    { "include": "#functions" }
+  ],
+  "repository": {
+    "repl-prompt": {
+      "name": "markup.heading.prompt.cpp-repl",
+      "match": "^(\\s*)(cpp(?::c\\+\\+\\d+)?(?:\\s*\\[\\d+\\])?(?:\\s*\\([^)]+\\))?\\s*>|\\.\\.\\.>)(\\s*)",
+      "captures": {
+        "2": { "name": "keyword.control.prompt.cpp-repl" }
+      }
+    },
+    "repl-command": {
+      "patterns": [
+        {
+          "name": "keyword.control.repl-command.cpp-repl",
+          "match": "^\\s*:(help|h|quit|exit|q|dump|reset|clear|cls|c|version)\\b"
+        },
+        {
+          "name": "meta.repl-command.with-arg.cpp-repl",
+          "match": "^\\s*:(load|lib|I|L|undo)\\b(?:\\s+([^\\n;]*))?",
+          "captures": {
+            "1": { "name": "keyword.control.repl-command.cpp-repl" },
+            "2": { "name": "string.unquoted.path.cpp-repl" }
+          }
+        }
+      ]
+    },
+    "repl-output": {
+      "patterns": [
+        {
+          "name": "markup.inserted.output.cpp-repl",
+          "match": "^\\s*\\((?:[A-Za-z_][\\w:<>\\s\\*&,]*)\\)\\s+.*$"
+        },
+        {
+          "name": "comment.line.output.timing.cpp-repl",
+          "match": "^\\s*[⏱▸›»].*$"
+        },
+        {
+          "name": "string.quoted.output.bracket.cpp-repl",
+          "match": "\\[include paths:[^\\]]*\\]|\\[.*\\b(ok|err)\\b.*\\]"
+        }
+      ]
+    },
+    "preprocessor": {
+      "name": "meta.preprocessor.cpp-repl",
+      "begin": "^\\s*#\\s*(include|define|undef|if|ifdef|ifndef|elif|else|endif|pragma|error|warning|line)\\b",
+      "end": "$",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.directive.cpp-repl" }
+      },
+      "patterns": [
+        { "include": "#strings" },
+        { "include": "#comments" },
+        {
+          "name": "string.quoted.include.cpp-repl",
+          "match": "<[^>]+>|\"[^\"]+\""
+        },
+        {
+          "name": "entity.name.function.macro.cpp-repl",
+          "match": "\\b[A-Z_][A-Z0-9_]+\\b"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.cpp-repl",
+          "begin": "//",
+          "end": "$",
+          "patterns": [
+            {
+              "name": "markup.underline.link.cpp-repl",
+              "match": "https?://[^\\s]+"
+            }
+          ]
+        },
+        {
+          "name": "comment.block.cpp-repl",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.raw.cpp-repl",
+          "begin": "R\"([a-zA-Z0-9_]{0,16})\\(",
+          "end": "\\)\\1\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cpp-repl",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.cpp-repl",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cpp-repl",
+              "match": "\\\\[abfnrtv'\"\\\\]|\\\\x[0-9A-Fa-f]+|\\\\u[0-9A-Fa-f]{4}|\\\\U[0-9A-Fa-f]{8}|\\\\[0-7]{1,3}"
+            },
+            {
+              "name": "constant.character.escape.cpp-repl",
+              "match": "\\\\\\n"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.cpp-repl",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cpp-repl",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.cpp-repl",
+          "match": "\\b(alignas|alignof|and|and_eq|asm|auto|bitand|bitor|break|case|catch|compl|concept|const|consteval|constexpr|constinit|const_cast|continue|co_await|co_return|co_yield|decltype|default|delete|do|dynamic_cast|else|enum|explicit|export|extern|false|for|friend|goto|if|inline|mutable|namespace|new|noexcept|not|not_eq|nullptr|operator|or|or_eq|private|protected|public|register|reinterpret_cast|requires|return|sizeof|static|static_assert|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|using|virtual|volatile|while|xor|xor_eq|import|module)\\b"
+        },
+        {
+          "name": "keyword.control.conditional.cpp-repl",
+          "match": "\\b(if|else|switch|case|default)\\b"
+        },
+        {
+          "name": "keyword.control.loop.cpp-repl",
+          "match": "\\b(for|while|do|break|continue|goto)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.cpp-repl",
+          "match": "\\b(void|bool|char|char8_t|char16_t|char32_t|wchar_t|short|int|long|signed|unsigned|float|double|size_t|ptrdiff_t|int8_t|int16_t|int32_t|int64_t|uint8_t|uint16_t|uint32_t|uint64_t|intptr_t|uintptr_t|auto)\\b"
+        },
+        {
+          "name": "support.type.cpp-repl",
+          "match": "\\b(std::(?:string|vector|map|unordered_map|set|unordered_set|array|deque|list|pair|tuple|optional|variant|any|function|shared_ptr|unique_ptr|weak_ptr|mutex|thread|future|chrono|filesystem|string_view|span|ranges|ostream|istream|iostream|ostringstream|istringstream|stringstream)|string|vector|map|cpp_int|bigint|mpz_int|cpp_dec_float|boost::multiprecision::cpp_int)\\b"
+        },
+        {
+          "name": "storage.modifier.cpp-repl",
+          "match": "\\b(const|constexpr|volatile|mutable|static|extern|inline|virtual|explicit|friend|typename|unsigned|signed)\\b"
+        },
+        {
+          "name": "support.variable.std.cpp-repl",
+          "match": "\\bstd::(?:cout|cin|cerr|clog|endl|flush|hex|dec|oct|ws)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.cpp-repl",
+          "match": "\\b(true|false|nullptr)\\b"
+        },
+        {
+          "name": "constant.numeric.cpp-repl",
+          "match": "\\b(nullptr_t|NULL)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.cpp-repl",
+          "match": "\\b0[xX][0-9a-fA-F']+([uU]?[lL]{0,2}|[uU][lL]{0,2})?\\b"
+        },
+        {
+          "name": "constant.numeric.binary.cpp-repl",
+          "match": "\\b0[bB][01']+\\b"
+        },
+        {
+          "name": "constant.numeric.decimal.cpp-repl",
+          "match": "\\b\\d[0-9']*(?:\\.[0-9']*)?(?:[eE][+-]?[0-9']+)?[fFlL]?\\b|\\B\\.[0-9][0-9']*(?:[eE][+-]?[0-9']+)?[fFlL]?\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.cpp-repl",
+          "match": "(<=>|::|->\\*|->|\\.\\*|\\.\\.\\.|<<=|>>=|\\+=|-=|\\*=|/=|%=|\\^=|&=|\\|=|<<|>>|<=|>=|==|!=|&&|\\|\\||\\+\\+|--|\\+|-|\\*|/|%|\\^|&|\\||~|!|<|>|=|\\?|:|,|;)"
+        },
+        {
+          "name": "keyword.operator.bracket.cpp-repl",
+          "match": "[\\{\\}\\[\\]\\(\\)]"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.cpp-repl",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_:]*)(?=\\s*\\()"
+        },
+        {
+          "name": "variable.other.cpp-repl",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}

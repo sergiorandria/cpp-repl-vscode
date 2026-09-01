@@ -1,0 +1,251 @@
+{
+  "name": "cpp-repl",
+  "displayName": "C++ REPL (cpp-repl)",
+  "description": "Syntax highlighting and REPL integration for cpp-repl — Python-like incremental C++ REPL (LLJIT + clang::Interpreter).",
+  "version": "0.3.0",
+  "publisher": "sergiorandria",
+  "author": {
+    "name": "Sergio Randriamihoatra",
+    "email": "sergiorandria@github"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sergiorandria/cpp-repl-vscode.git"
+  },
+  "homepage": "https://github.com/sergiorandria/cpp-repl-vscode",
+  "bugs": {
+    "url": "https://github.com/sergiorandria/cpp-repl-vscode/issues"
+  },
+  "qna": "marketplace",
+  "sponsor": {
+    "url": "https://github.com/sponsors/sergiorandria"
+  },
+  "keywords": [
+    "c++",
+    "cpp",
+    "repl",
+    "jupyter",
+    "clang",
+    "llvm",
+    "lljit",
+    "interpreter",
+    "syntax-highlighting"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "onLanguage:cpp-repl",
+    "onCommand:cpp-repl.startRepl",
+    "onCommand:cpp-repl.runFile",
+    "onCommand:cpp-repl.runSelection",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#0e639c",
+    "theme": "dark"
+  },
+  "contributes": {
+    "configurationDefaults": {
+      "[cpp-repl]": {
+        "C_Cpp.errorSquiggles": "Disabled",
+        "C_Cpp.enhancedColorization": "Disabled",
+        "C_Cpp.intelliSenseEngine": "Disabled",
+        "editor.semanticHighlighting.enabled": false,
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": false
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "cpp-repl",
+        "aliases": [
+          "C++ REPL",
+          "cpp-repl"
+        ],
+        "extensions": [
+          ".cpprepl",
+          ".cpp-repl",
+          ".crepl",
+          ".crpl",
+          ".repl.cpp"
+        ],
+        "filenames": [],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cpp-repl",
+        "scopeName": "source.cpp-repl",
+        "path": "./syntaxes/cpp-repl.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.cpp-repl.session",
+        "path": "./syntaxes/cpp-repl-session.tmLanguage.json",
+        "injectTo": [
+          "source.cpp-repl"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "cpp-repl",
+        "path": "./snippets/cpp-repl.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cpp-repl.startRepl",
+        "title": "C++ REPL: Start Interactive Session",
+        "category": "C++ REPL"
+      },
+      {
+        "command": "cpp-repl.runFile",
+        "title": "C++ REPL: Run Current File in REPL",
+        "category": "C++ REPL"
+      },
+      {
+        "command": "cpp-repl.runSelection",
+        "title": "C++ REPL: Run Selection in REPL",
+        "category": "C++ REPL"
+      },
+      {
+        "command": "cpp-repl.restartRepl",
+        "title": "C++ REPL: Restart REPL",
+        "category": "C++ REPL"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "cpp-repl.startRepl"
+        },
+        {
+          "command": "cpp-repl.runFile"
+        },
+        {
+          "command": "cpp-repl.runSelection"
+        },
+        {
+          "command": "cpp-repl.restartRepl"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "cpp-repl.runSelection",
+          "when": "editorTextFocus && (editorLangId == cpp-repl || editorLangId == cpp)",
+          "group": "cpp-repl"
+        },
+        {
+          "command": "cpp-repl.runFile",
+          "when": "editorTextFocus && (editorLangId == cpp-repl || editorLangId == cpp)",
+          "group": "cpp-repl"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "cpp-repl.runFile",
+          "when": "editorLangId == cpp-repl",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "cpp-repl.runSelection",
+        "key": "ctrl+enter",
+        "when": "editorTextFocus && (editorLangId == cpp-repl || editorLangId == cpp)",
+        "mac": "cmd+enter"
+      },
+      {
+        "command": "cpp-repl.runFile",
+        "key": "ctrl+shift+enter",
+        "when": "editorTextFocus && (editorLangId == cpp-repl || editorLangId == cpp)",
+        "mac": "cmd+shift+enter"
+      }
+    ],
+    "configuration": {
+      "title": "C++ REPL",
+      "properties": {
+        "cppRepl.executablePath": {
+          "type": "string",
+          "default": "cpp-repl",
+          "description": "Path to cpp-repl executable. Use absolute path if not in $PATH, e.g. /home/user/cpp-repl/build/cpp-repl. Supports ${workspaceFolder} variable."
+        },
+        "cppRepl.extraArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra arguments passed to cpp-repl on launch (e.g. [\"-I\", \"./include\", \"-L\", \"./lib\", \"-l\", \"mylib\"])."
+        },
+        "cppRepl.includePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Include paths added via -I (also configurable via extraArgs)."
+        },
+        "cppRepl.clearOnRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "Clear terminal before running file/selection."
+        }
+      }
+    },
+    "terminal": {
+      "profiles": [
+        {
+          "profileName": "C++ REPL",
+          "path": "cpp-repl",
+          "args": [],
+          "icon": "terminal-powershell",
+          "overrideName": true
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --no-yarn",
+    "lint": "eslint src --ext ts",
+    "lint:fix": "eslint src --ext ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\" \"*.{json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\" \"*.{json,md}\"",
+    "test": "node ./out/test/runTest.js",
+    "test:unit": "mocha --ui tdd out/test/unit/**/*.test.js",
+    "pretest": "npm run compile && npm run lint",
+    "vscode:package": "vsce package --no-yarn",
+    "clean": "rm -rf out dist *.vsix"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^3.2.0",
+    "eslint": "^8.57.0",
+    "glob": "^10.3.0",
+    "mocha": "^10.4.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.4.0"
+  }
+}

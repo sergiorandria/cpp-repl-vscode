@@ -1,0 +1,75 @@
+// demo.cpprepl — C++ REPL demo (raw C++, no main needed)
+// Try: Ctrl+Shift+Enter to :load in REPL, or Ctrl+Enter on selection
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+// ── basic: just type raw C++ like Python ──────────────────────
+int x = 42;
+x + 1               // → (int) 43
+
+auto f = [](double v){ return v*v; };
+f(234.23423948934894) // high-precision: 54865.278...
+
+// ── big integers (header-only, like Python int) ───────────────
+#include <boost/multiprecision/cpp_int.hpp>
+using boost::multiprecision::cpp_int;
+
+cpp_int a = cpp_int("123456789012345678901234567890");
+cpp_int b = cpp_int("987654321098765432109876543210");
+a * b               // arbitrary precision
+
+bigint y = cpp_int("999999999999999999999999999999");
+y * y
+
+// ── classes, templates, incremental state ──────────────────────
+struct Counter {
+  int value = 0;
+  void inc() { ++value; }
+  int get() const { return value; }
+};
+Counter c;
+c.inc(); c.inc();
+std::cout << "Counter: " << c.get() << std::endl; // → Counter: 2
+
+template<typename T> T square(T v){ return v*v; }
+square(5)           // → (int) 25
+square(3.14)        // → (double) 9.859...
+
+// ── C++20 concepts (auto-detects -std=c++20) ─────────────────
+template<typename T> concept Addable = requires(T p, T q){ p + q; };
+Addable auto z = 42;
+z + 10
+
+// ── C++23 modules (auto-detects -std=c++23) ───────────────────
+// import std; // uncomment on C++23 toolchain
+
+// ── REPL paths & commands (live, survive version upgrades) ─────
+// :I ./include          // add include path (relative or absolute)
+// :L ./lib              // library search path
+// :lib mylib            // link -lmylib or ./lib/mylib.so
+// :lib ./tmp_lib/libmylib.so
+// :load examples/hello.cpp
+// :dump                 // show history + version
+// :undo 1               // undo last input
+// :clear                // clear screen
+// :version              // current -std
+// :help
+
+// ── preprocessor & raw strings ─────────────────────────────────
+#define GREETING "Hello from C++ REPL!"
+#define SQUARE(x) ((x)*(x))
+
+R"raw( raw string with "quotes" and \n no escapes )raw"
+R"delimiter( anything " ) ) delimiter"
+
+// numbers
+int hex = 0xDEADBEEF;
+int bin = 0b101010;
+double pi = 3.14159265358979;
+float fpi = 3.14f;
+
+// vector demo (value printing shows type)
+std::vector<int> v = {1,2,3,4,5};
+v.size()            // → (size_t) 5

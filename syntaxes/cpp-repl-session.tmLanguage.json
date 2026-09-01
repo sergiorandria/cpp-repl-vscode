@@ -1,0 +1,30 @@
+{
+  "name": "C++ REPL Session",
+  "scopeName": "source.cpp-repl.session",
+  "injectionSelector": "L:source.cpp-repl",
+  "patterns": [
+    {
+      "include": "#session-line"
+    }
+  ],
+  "repository": {
+    "session-line": {
+      "patterns": [
+        {
+          "name": "meta.session.prompt.success.cpp-repl",
+          "match": "^(cpp(?::c\\+\\+\\d+)?\\s*\\[\\d+\\]\\s*\\([^)]+\\s+[✓✔]\\s*\\)\\s*>).*$",
+          "captures": {
+            "1": { "name": "keyword.control.prompt.success.cpp-repl" }
+          }
+        },
+        {
+          "name": "meta.session.prompt.error.cpp-repl",
+          "match": "^(cpp(?::c\\+\\+\\d+)?\\s*\\[\\d+\\]\\s*\\([^)]+\\s+[✗✘]\\s*\\)\\s*>).*$",
+          "captures": {
+            "1": { "name": "keyword.control.prompt.error.cpp-repl" }
+          }
+        }
+      ]
+    }
+  }
+}

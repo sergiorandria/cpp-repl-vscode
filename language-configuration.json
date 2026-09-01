@@ -1,0 +1,51 @@
+{
+  "comments": {
+    "lineComment": "//",
+    "blockComment": ["/*", "*/"]
+  },
+  "brackets": [
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"]
+  ],
+  "autoClosingPairs": [
+    { "open": "{", "close": "}" },
+    { "open": "[", "close": "]" },
+    { "open": "(", "close": ")" },
+    { "open": "\"", "close": "\"", "notIn": ["string", "comment"] },
+    { "open": "'", "close": "'", "notIn": ["string", "comment"] },
+    { "open": "/*", "close": " */", "notIn": ["string"] }
+  ],
+  "surroundingPairs": [
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"],
+    ["\"", "\""],
+    ["'", "'"],
+    ["<", ">"]
+  ],
+  "wordPattern": "(-?\\d*\\.\\d\\w*)|([^\\s\\(\\)\\[\\]\\{\\};:,\\.\\\"'\\s]+)",
+  "indentationRules": {
+    "increaseIndentPattern": "^.*\\{[^}\"]*$|^.*\\([^)\"]*$|^\\s*#(if|ifdef|ifndef).*",
+    "decreaseIndentPattern": "^\\s*(\\}|\\))|^\\s*#(else|elif|endif).*"
+  },
+  "onEnterRules": [
+    {
+      "beforeText": "^\\s*\\/\\*\\*(?!\\/)([^\\*]|\\*(?!\\/))*$",
+      "afterText": "^\\s*\\*\\/$",
+      "action": { "indentAction": "IndentOutdent", "appendText": " * " }
+    },
+    {
+      "beforeText": "^\\s*\\/\\*\\*(?!\\/)([^\\*]|\\*(?!\\/))*$",
+      "action": { "indentAction": "None", "appendText": " * " }
+    },
+    {
+      "beforeText": "^\\s*\\*.*$",
+      "action": { "indentAction": "None", "appendText": "* " }
+    },
+    {
+      "beforeText": "^\\s*(#.*)?$",
+      "action": { "indentAction": "None" }
+    }
+  ]
+}

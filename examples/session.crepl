@@ -1,0 +1,22 @@
+// session transcript with prompts — showcases prompt & output highlighting
+// Copy-paste body without prompts into REPL, or view with grammar
+
+cpp:c++17 [1]> int x = 42;
+cpp:c++17 [2] (0.41ms ✓)> x + 1
+(int) 43
+cpp:c++17 [3] (0.20ms ✓)> #include <iostream>
+cpp:c++17 [4] (0.35ms ✓)> std::cout << "hi" << std::endl;
+hi
+(int) 3
+cpp:c++17 [5]> auto f = [](double v){ return v*v; };
+cpp:c++17 [6] (0.55ms ✓)> f(3.14)
+(double) 9.8596
+cpp:c++20 [7] (1.12ms ✓)> template<typename T> concept Addable = requires(T a, T b){ a+b; };
+cpp:c++20 [8]> Addable auto y = 42;
+(int) 42
+cpp:c++20 [9]> :I ./include
+[include paths: ./include]
+cpp:c++20 [10]> :dump
+// history + version dump
+cpp:c++20 [11]> :undo
+cpp:c++20 [11] (0.10ms ✓)> :clear
