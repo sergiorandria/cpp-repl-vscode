@@ -246,6 +246,6 @@
     "glob": "^10.3.0",
     "mocha": "^10.4.0",
     "prettier": "^3.2.0",
-    "typescript": "^5.4.0"
+    "typescript": "^7.0.2"
   }
 }
