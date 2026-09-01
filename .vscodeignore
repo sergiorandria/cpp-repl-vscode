@@ -18,6 +18,7 @@ out/test/**
 CONTRIBUTING.md
 SECURITY.md
 CODE_OF_CONDUCT.md
+SUPPORT.md
 .eslintrc.json
 .prettierrc.json
 .prettierignore
