@@ -244,7 +244,7 @@
     "@vscode/vsce": "^3.2.0",
     "eslint": "^8.57.0",
     "glob": "^10.3.0",
-    "mocha": "^10.4.0",
+    "mocha": "^12.0.2",
     "prettier": "^3.2.0",
     "typescript": "^5.4.0"
   }
