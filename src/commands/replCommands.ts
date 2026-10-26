@@ -1,6 +1,12 @@
 import * as vscode from 'vscode';
-import { getOrCreateTerminal, sendToRepl, restartTerminal } from '../terminal/replTerminal';
+import {
+  getOrCreateTerminal,
+  sendToRepl,
+  restartTerminal,
+  waitForTerminalReady,
+} from '../terminal/replTerminal';
 import { logInfo, logError } from '../core/logger';
+import { quoteReplArg } from '../utils/replArg';
 
 /**
  * Register all cpp-repl commands.
@@ -8,10 +14,11 @@ import { logInfo, logError } from '../core/logger';
  */
 export function registerReplCommands(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('cpp-repl.startRepl', () => {
+    vscode.commands.registerCommand('cpp-repl.startRepl', async () => {
       try {
         const term = getOrCreateTerminal();
         term.show(true);
+        await waitForTerminalReady(term);
         vscode.window.showInformationMessage('C++ REPL started.');
         logInfo('REPL started via command');
       } catch (err) {
@@ -20,10 +27,11 @@ export function registerReplCommands(context: vscode.ExtensionContext): void {
       }
     }),
 
-    vscode.commands.registerCommand('cpp-repl.restartRepl', () => {
+    vscode.commands.registerCommand('cpp-repl.restartRepl', async () => {
       try {
         const term = restartTerminal();
         term.show(true);
+        await waitForTerminalReady(term);
         vscode.window.showInformationMessage('C++ REPL restarted.');
         logInfo('REPL restarted');
       } catch (err) {
@@ -40,28 +48,49 @@ export function registerReplCommands(context: vscode.ExtensionContext): void {
       }
       const doc = editor.document;
       if (doc.isDirty) {
+        let saved = false;
         try {
-          await doc.save();
+          saved = await doc.save();
         } catch (err) {
           logError('Failed to save document before run', err);
         }
+        if (!saved) {
+          vscode.window.showWarningMessage(
+            'C++ REPL: the file must be saved before it can be loaded.'
+          );
+          return;
+        }
+      }
+      if (doc.uri.scheme !== 'file') {
+        vscode.window.showWarningMessage(
+          'C++ REPL: only files saved to disk can be loaded into the REPL.'
+        );
+        return;
       }
       const filePath = doc.uri.fsPath;
-      const term = getOrCreateTerminal();
-      term.show(true);
-      const quoted = filePath.includes(' ') ? `"${filePath}"` : filePath;
-      logInfo(`Running file in REPL: ${quoted}`);
-      // Delay to ensure REPL is ready after terminal creation
-      setTimeout(() => {
-        try {
-          term.sendText(`:load ${quoted}`);
-        } catch (err) {
-          logError('Failed to send :load', err);
-        }
-      }, 300);
+      let loadCommand: string;
+      try {
+        loadCommand = `:load ${quoteReplArg(filePath)}`;
+      } catch (err) {
+        logError('Refusing to load file with unsupported characters in its path', err);
+        vscode.window.showErrorMessage(`C++ REPL: cannot load ${filePath}: ${String(err)}`);
+        return;
+      }
+      logInfo(`Running file in REPL: ${loadCommand}`);
+      try {
+        // The terminal runs the REPL directly, so text is written straight to
+        // the REPL's stdin. Wait for the process to start instead of racing it.
+        const term = getOrCreateTerminal();
+        term.show(true);
+        await waitForTerminalReady(term);
+        term.sendText(loadCommand);
+      } catch (err) {
+        logError('Failed to send :load', err);
+        vscode.window.showErrorMessage(`C++ REPL: failed to load file in terminal: ${String(err)}`);
+      }
     }),
 
-    vscode.commands.registerCommand('cpp-repl.runSelection', () => {
+    vscode.commands.registerCommand('cpp-repl.runSelection', async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) {
         vscode.window.showErrorMessage('No active editor.');
@@ -77,7 +106,7 @@ export function registerReplCommands(context: vscode.ExtensionContext): void {
         }
       }
       logInfo(`Running selection (${text.length} chars) in REPL`);
-      sendToRepl(text, true);
+      await sendToRepl(text, true);
     })
   );
 }
